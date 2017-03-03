@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject, Observable } from '../app.rx';
+import { PunService } from '../pun-service.service';
 
 @Component({
   selector: 'app-pun-lookup',
@@ -7,21 +8,32 @@ import { Subject, Observable } from '../app.rx';
     <input #keywords type="text" 
       (input)="keywordsInputChange$.next(keywords.value)"/>
     <hr/>
-    <div>{{foo$ | async}}</div>
+    <h3>keywords suggested</h3>
+    <span>{{suggestedKeywords}}</span>
+    <h3>actual puns</h3>
+    <ul>
+      <li *ngFor="let pun of (punsFound$ | async)">
+        {{pun}}
+      </li>
+    </ul>
   `,
-  styles: []
+  styles: [],
+  providers: [ PunService ]
 })
 export class PunLookupComponent implements OnInit {
 
+  suggestedKeywords: string[] = null;
+
   keywordsInputChange$ = new Subject<string>();
 
-  foo$ = this.keywordsInputChange$
-      .map(x => x[x.length - 1] === 'f' ? '' : x + '!')
-      // .filter(x => x.indexOf('f') === -1)
-      // .map(x => x + '!');
+  suggestedKeyword$ = this.keywordsInputChange$
+    .switchMap(text => this.puns.suggestKeywords(text));
 
+  punsFound$ = this.suggestedKeyword$
+      .do(keywords => this.suggestedKeywords = keywords)
+      .switchMap(keywords => this.puns.getPuns(keywords))
 
-  constructor() { 
+  constructor(private puns: PunService) { 
   }
 
   ngOnInit() {
