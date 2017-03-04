@@ -1,1 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~https://fonts.googleapis.com/icon?family=Material+Icons';
+@import '~https://fonts.googleapis.com/icon?family=Roboto';
+@import '~@angular/material/core/theming/prebuilt/pink-bluegrey.css';
+
+body {
+    font-family: Roboto;
+    margin: 0px;
+}
+
+.body-margin {
+    margin: 50px;
+}
+
+.primary-color {
+    color: #E91E63;
+}
+
+.accent-color {
+    color: #607D8B;
+}

@@ -5,12 +5,17 @@ import { PunService } from '../pun-service.service';
 @Component({
   selector: 'app-pun-lookup',
   template: `
-    <input #keywords type="text" 
-      (input)="keywordsInputChange$.next(keywords.value)"/>
-    <hr/>
-    <h3>keywords suggested</h3>
+    <span>
+      <h3 class="primary-color">Search for puns</h3>
+    </span>
+    <md-input-container>
+      <input #keywords type="text" mdInput placeholder="Get ready for awesome!" (input)="keywordsInputChange$.next(keywords.value)"/>
+    </md-input-container>
+    
+    <h3 class="primary-color">Some Punny Suggestions</h3>
     <span>{{suggestedKeywords}}</span>
-    <h3>actual puns</h3>
+    
+    <h3 class="primary-color">Puns</h3>
     <ul>
       <li *ngFor="let pun of (punsFound$ | async)">
         {{pun}}
