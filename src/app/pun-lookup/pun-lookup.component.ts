@@ -6,10 +6,13 @@ import { PunService } from '../pun-service.service';
   selector: 'app-pun-lookup',
   template: `
     <span>
-      <h3 class="primary-color">Search for puns</h3>
+      <h3 class="primary-color">Search for puns by keyword</h3>
     </span>
     <md-input-container>
-      <input #keywords type="text" mdInput placeholder="Get ready for awesome!" (input)="keywordsInputChange$.next(keywords.value)"/>
+      <input #keywords type="text" mdInput
+        autofocus="true"
+        placeholder="Enter a keyword"
+        (input)="keywordsInputChange$.next(keywords.value)"/>
     </md-input-container>
     
     <h3 class="primary-color">Some Punny Suggestions</h3>
