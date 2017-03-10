@@ -16,14 +16,17 @@ import { PunService } from '../pun-service.service';
     </md-input-container>
     
     <h3 class="primary-color">Some Punny Suggestions</h3>
-    <span>{{suggestedKeywords}}</span>
+    <span class="accent-color">{{suggestedKeywords}}</span>
     
     <h3 class="primary-color">Puns</h3>
-    <ul>
-      <li *ngFor="let pun of (punsFound$ | async)">
-        {{pun}}
-      </li>
-    </ul>
+    <md-card *ngFor="let pun of (punsFound$ | async)">
+      <md-card-content>
+        {{pun?.pun}}
+        {{pun?.answer}}
+      </md-card-content>
+    </md-card>
+      
+        
   `,
   styles: [],
   providers: [ PunService ]

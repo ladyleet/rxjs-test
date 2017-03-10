@@ -1,33 +1,45 @@
 import { Injectable } from '@angular/core';
 import { Observable, asap } from './app.rx';
 
-const data = {
-  keywords: {
-    'pickle': [1, 2],
-    'hat': [0, 2]
+const keywords = {
+  'banana': [0, 13, 14, 15, 16],
+  'cheese': [3, 4, 5, 6, 7, 8, 12],
+  'bird': [3, 11, 12, 1],
+  'hotel': [4, 9, 10, 11],
+  'mexican': [6], 
+  'cow': [12]
+};
+
+
+const puns = {
+  '0': {
+    pun: 'My wife has banana diet',
+    answer: 'She hasnt lost weight, but you should see her climb trees now!'
   },
-  puns: {
-    '0': 'this is a pun about a hat',
-    '1': 'this is a pun about a pickle',
-    '2': 'this is a pun about a pickle and a hat'
+  '1': { 
+    pun: 'Id make a pun about a chicken...', 
+    answer: 'But it would be fowl'
   },
-}
+  '2': {
+    pun: 'this is a pun about a pickle and a hat', 
+    answer: 'answer'
+  }
+};
 
 @Injectable()
 export class PunService {
 
   constructor() { }
 
-  getPuns(keywords: string[]): Observable<string[]> {
-    if (!keywords || keywords.length === 0) {
+  getPuns(kwds: string[]): Observable<string[]> {
+    if (!kwds || kwds.length === 0) {
       return Observable.of([]);
     }
-
-    const found = keywords.reduce((found, keyword) => {
-      const ids = data.keywords[keyword];
+    const found = kwds.reduce((found, keyword) => {
+      const ids = keywords[keyword];
       if (ids) {
         return ids.reduce((found, id) => {
-          found[id] = data.puns[id];
+          found[id] = puns[id];
           return found;
         }, found);
       }
@@ -43,7 +55,7 @@ export class PunService {
     }
 
     return Observable.of(
-      Object.keys(data.keywords)
+      Object.keys(keywords)
         .filter(keyword => keyword.indexOf(partial) === 0)
     );
   }
