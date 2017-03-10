@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
-
+import { SpeechRecognition, SpeechRecognitionToken } from './speech-recognition.service';
 import 'hammerjs';
 
 import { AppComponent } from './app.component';
@@ -20,7 +20,9 @@ import { PunLookupComponent } from './pun-lookup/pun-lookup.component';
     HttpModule,
     MaterialModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    { provide: SpeechRecognitionToken, useValue: SpeechRecognition }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
