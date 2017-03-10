@@ -18,7 +18,8 @@ import { PunService } from '../pun-service.service';
     <h3 class="primary-color">Puns</h3>
     <md-card *ngFor="let pun of (punsFound$ | async)">
       <md-card-content>
-        {{pun}}
+        {{pun?.pun}}
+        {{pun?.answer}}
       </md-card-content>
     </md-card>
       
