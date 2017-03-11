@@ -6,19 +6,19 @@ import { PunService } from '../pun-service.service';
   selector: 'app-pun-lookup',
   template: `
     <span>
-      <h3 class="primary-color">Search for puns by keyword</h3>
+      <h3 class="primary-color">Search for Puns</h3>
     </span>
     <md-input-container>
       <input #keywords type="text" mdInput
         autofocus="true"
-        placeholder="Enter a keyword"
+        placeholder="Enter keyword"
         (input)="keywordsInputChange$.next(keywords.value)"/>
     </md-input-container>
     
-    <h3 class="primary-color">Some Punny Suggestions</h3>
+    <h3 class="primary-color">Pun Arsenal...</h3>
     <span class="accent-color">{{suggestedKeywords}}</span>
     
-    <h3 class="primary-color">Puns</h3>
+    <h3 class="primary-color">Puns Found</h3>
     <md-card *ngFor="let pun of (punsFound$ | async)">
       <md-card-content>
         {{pun?.pun}}
