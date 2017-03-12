@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Subject, Observable } from '../app.rx';
 import { PunService } from '../pun-service.service';
+import { SpeechService } from '../speech.service';
 
 @Component({
   selector: 'app-pun-lookup',
@@ -14,6 +15,8 @@ import { PunService } from '../pun-service.service';
         placeholder="Enter keyword"
         (input)="keywordsInputChange$.next(keywords.value)"/>
     </md-input-container>
+
+    <div *ngIf="speech.isSupported()"><button (click)="listenClick$.next()">Listen</button></div>
     
     <h3 class="primary-color">Pun Arsenal...</h3>
     <span class="accent-color">{{suggestedKeywords}}</span>
@@ -25,29 +28,38 @@ import { PunService } from '../pun-service.service';
         {{pun?.answer}}
       </md-card-content>
     </md-card>
-      
-        
   `,
   styles: [],
-  providers: [ PunService ]
+  providers: [
+    PunService,
+    SpeechService
+  ]
 })
-export class PunLookupComponent implements OnInit {
+export class PunLookupComponent {
 
   suggestedKeywords: string[] = null;
 
   keywordsInputChange$ = new Subject<string>();
 
-  suggestedKeyword$ = this.keywordsInputChange$
+  listenClick$ = new Subject<void>();
+
+  spokenKeyword$ = this.listenClick$
+    .switchMap(() => this.speech.listen())
+
+  typedKeyword$ = this.keywordsInputChange$
     .switchMap(text => this.puns.suggestKeywords(text));
 
-  punsFound$ = this.suggestedKeyword$
+  keyword$ = Observable.merge(
+    this.typedKeyword$,
+    this.spokenKeyword$
+  );
+
+  punsFound$ = this.keyword$
       .do(keywords => this.suggestedKeywords = keywords)
       .switchMap(keywords => this.puns.getPuns(keywords))
 
-  constructor(private puns: PunService) { 
-  }
-
-  ngOnInit() {
-  }
-
+  constructor(
+    private puns: PunService, 
+    private speech: SpeechService
+  ) {}
 }

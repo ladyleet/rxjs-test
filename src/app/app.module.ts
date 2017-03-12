@@ -12,7 +12,7 @@ import { PunLookupComponent } from './pun-lookup/pun-lookup.component';
 @NgModule({
   declarations: [
     AppComponent,
-    PunLookupComponent
+    PunLookupComponent,
   ],
   imports: [
     BrowserModule,
@@ -20,7 +20,8 @@ import { PunLookupComponent } from './pun-lookup/pun-lookup.component';
     HttpModule,
     MaterialModule.forRoot()
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
