@@ -163,8 +163,8 @@ export class PunService {
     if (!kwds || kwds.length === 0) {
       return Observable.of([]);
     }
-    const found = kwds.reduce((found, keyword) => {
-      const ids = keywords[keyword];
+    const found = kwds.reduce((found, kwd) => {
+      const ids = keywords[kwd];
       if (ids) {
         return ids.reduce((found, id) => {
           found[id] = puns[id];

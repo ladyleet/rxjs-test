@@ -1,8 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { Subject, Observable } from '../app.rx';
 import { PunService } from '../pun-service.service';
-import { SpeechService } from '../speech.service';
-import { GoogleVisionService } from '../google-vision.service';
 
 @Component({
   selector: 'app-pun-lookup',
@@ -17,16 +15,18 @@ import { GoogleVisionService } from '../google-vision.service';
         (input)="keywordsInputChange$.next(keywords.value)"/>
     </md-input-container>
 
-    <div *ngIf="speech.isSupported()">
-      <button (click)="listenClick$.next()">Listen</button>
-    </div>
-
-    <div>
-      <app-snapshot-camera [width]="400" [height]="400" (snapshot)="snapshot$.next($event)"></app-snapshot-camera>
-    </div>
+    <md-input-container>
+      <input #mykeywords type="text" mdInput 
+      autofocus="true"
+        placeholder="Enter keyword" 
+        (input)="keywordsInputChange2$.next(mykeywords.value)"/>
+    </md-input-container>
     
     <h3 class="primary-color">Pun Arsenal...</h3>
     <span class="accent-color">{{suggestedKeywords}}</span>
+
+    <h3 class="primary-color">Pun Arsenal...</h3>
+    <span class="accent-color">{{suggestedKeywords2}}</span>
     
     <h3 class="primary-color">Puns Found</h3>
     <md-card *ngFor="let pun of (punsFound$ | async)">
@@ -35,51 +35,42 @@ import { GoogleVisionService } from '../google-vision.service';
         {{pun?.answer}}
       </md-card-content>
     </md-card>
+
+    <md-card *ngFor="let pun of (punsFound2$ | async)">
+      <md-card-content>
+        {{pun?.pun}}
+        {{pun?.answer}}
+      </md-card-content>
+    </md-card>
   `,
   styles: [],
   providers: [
-    PunService,
-    SpeechService,
-    GoogleVisionService
+    PunService
   ]
 })
 export class PunLookupComponent {
 
   suggestedKeywords: string[] = null;
+  suggestedKeywords2: string[] = null;
 
   keywordsInputChange$ = new Subject<string>();
+  keywordsInputChange2$ = new Subject<string>();
 
-  listenClick$ = new Subject<void>();
+  keyword2$ = this.keywordsInputChange2$
+    .switchMap(text => this.puns.suggestKeywords(text))
+    .do(keywords => this.suggestedKeywords2 = keywords);
 
-  snapshot$ = new Subject<{ dataURL: string }>();
+  punsFound2$ = this.keyword2$ 
+    .switchMap(keywords => this.puns.getPuns(keywords))
 
-  googleVision$ = this.snapshot$
-    .map(e => {
-      const dataURLHeader = 'data:image/png;base64,';
-      const base64Image = e.dataURL.substr(dataURLHeader.length);
-      return base64Image;
-    })
-    .switchMap(base64Image => this.googleVision.annotateImage(base64Image));
-
-  spokenKeyword$ = this.listenClick$
-    .switchMap(() => this.speech.listen())
-
-  typedKeyword$ = this.keywordsInputChange$
-    .switchMap(text => this.puns.suggestKeywords(text));
-
-  keyword$ = Observable.merge(
-    this.typedKeyword$,
-    this.spokenKeyword$,
-    this.googleVision$
-  );
+  keyword$ = this.keywordsInputChange$
+    .switchMap(text => this.puns.suggestKeywords(text))
+    .do(keywords => this.suggestedKeywords = keywords);
 
   punsFound$ = this.keyword$
-      .do(keywords => this.suggestedKeywords = keywords)
       .switchMap(keywords => this.puns.getPuns(keywords))
 
   constructor(
-    private puns: PunService, 
-    private speech: SpeechService,
-    private googleVision: GoogleVisionService
+    private puns: PunService
   ) {}
 }
