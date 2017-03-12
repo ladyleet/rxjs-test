@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, asap } from './app.rx';
 
+export interface Pun {
+  pun: string,
+  answer: string
+};
+
 const keywords = {
   'banana': [0, 13, 14, 15, 16],
   'cheese': [3, 4, 5, 6, 7, 8, 12],
@@ -31,7 +36,7 @@ export class PunService {
 
   constructor() { }
 
-  getPuns(kwds: string[]): Observable<string[]> {
+  getPuns(kwds: string[]): Observable<Pun[]> {
     if (!kwds || kwds.length === 0) {
       return Observable.of([]);
     }
