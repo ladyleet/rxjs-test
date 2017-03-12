@@ -8,11 +8,13 @@ import 'hammerjs';
 
 import { AppComponent } from './app.component';
 import { PunLookupComponent } from './pun-lookup/pun-lookup.component';
+import { SnapshotCameraComponent } from './snapshot-camera/snapshot-camera.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PunLookupComponent,
+    SnapshotCameraComponent,
   ],
   imports: [
     BrowserModule,
