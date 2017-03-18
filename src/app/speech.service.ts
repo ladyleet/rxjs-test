@@ -1,5 +1,5 @@
 import { Injectable, Inject, NgZone } from '@angular/core';
-import { Observable } from './app.rx';
+import { Observable } from 'rxjs/Observable';
 
 // TODO: get this injected properly
 const SpeechRecognition = window && (

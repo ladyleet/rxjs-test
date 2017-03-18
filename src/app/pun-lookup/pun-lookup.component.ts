@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { Subject, Observable } from '../app.rx';
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 import { PunService } from '../pun-service.service';
 import { SpeechService } from '../speech.service';
 import { GoogleVisionService } from '../google-vision.service';
