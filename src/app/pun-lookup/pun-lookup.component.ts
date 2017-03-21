@@ -17,8 +17,6 @@ import { GoogleVisionService } from '../google-vision.service';
 })
 export class PunLookupComponent {
 
-  suggestedKeywords: string[] = null;
-
   keywordsInputChange$ = new Subject<string>();
 
   listenClick$ = new Subject<void>();
@@ -43,10 +41,9 @@ export class PunLookupComponent {
     this.typedKeyword$,
     this.spokenKeyword$,
     this.googleVision$
-  );
+  ).share();
 
   punsFound$ = this.keyword$
-      .do(keywords => this.suggestedKeywords = keywords)
       .switchMap(keywords => this.puns.getPuns(keywords))
 
   constructor(

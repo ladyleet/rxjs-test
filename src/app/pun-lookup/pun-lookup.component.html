@@ -17,7 +17,7 @@
 </div>
 
 <h3 class="primary-color">Pun Arsenal...</h3>
-<span class="accent-color">{{suggestedKeywords}}</span>
+<span class="accent-color">{{keyword$ | async}}</span>
 
 <h3 class="primary-color">Puns Found</h3>
 <md-card *ngFor="let pun of (punsFound$ | async)">
