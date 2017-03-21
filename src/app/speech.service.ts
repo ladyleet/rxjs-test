@@ -12,38 +12,41 @@ export class SpeechService {
   constructor(private zone: NgZone) {
   }
 
-  private SpeechRecognition = SpeechRecognition;
-
-  isSupported(): boolean {
-    return Boolean(this.SpeechRecognition);
-  }
-
   listen(): Observable<string[]> {
-    const { SpeechRecognition } = this;
-
     return new Observable<string[]>(observer => {
       const speech = new SpeechRecognition();
 
-      speech.onresult = (e: any) => {
-        // since Angular doesn't wrap SpeechRecognition, we have to handle zones ourselves
-        this.zone.run(() => {
-          const results: string[] = <string[]>(
-            Array.from(e.results)
-              .reduce(
-                (final: string[], result: any) =>
-                  final.concat(Array.from(result, (x: any) => x.transcript)),
-                []
-              )
-          );
-          observer.next(results);
-          observer.complete();
-        });
+      const resultHandler = (e: any) => {
+        console.log(e);
+        const results: string[] = this.cleanSpeechResults(e.results);
+        observer.next(results);
+        observer.complete();
       };
 
+      const errorHandler = (err) => {
+        observer.error(err);
+      };
+
+      speech.addEventListener('result', resultHandler);
+      speech.addEventListener('error', errorHandler);
       speech.start();
+
       return () => {
+        speech.removeEventListener('result', resultHandler);
+        speech.removeEventListener('error', errorHandler);
         speech.abort();
       };
     });
+  }
+
+  private cleanSpeechResults(results: any): string[] {
+    return <string[]>(
+      Array.from(results)
+        .reduce(
+          (final: string[], result: any) =>
+            final.concat(Array.from(result, (x: any) => x.transcript)),
+          []
+        )
+    );
   }
 }

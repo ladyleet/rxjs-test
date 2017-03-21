@@ -1,15 +1,17 @@
-import { Component, Input, OnInit, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnInit, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-snapshot-camera',
   templateUrl: './snapshot-camera.component.html',
   styleUrls: ['./snapshot-camera.component.css']
 })
-export class SnapshotCameraComponent implements OnInit {
+export class SnapshotCameraComponent implements OnInit, OnDestroy {
 
   video: HTMLVideoElement;
 
   canvas: HTMLCanvasElement;
+
+  stream: MediaStream;
 
   @Input() width: number;
 
@@ -29,6 +31,10 @@ export class SnapshotCameraComponent implements OnInit {
     this.startSnapshot();
   }
 
+  ngOnDestroy() {
+    this.stopSnapshot();
+  }
+
   startSnapshot() {
     const { video, canvas } = this;
     canvas.width = canvas.height = 0;
@@ -44,6 +50,7 @@ export class SnapshotCameraComponent implements OnInit {
       }
     },
     (stream: MediaStream) => {
+      this.stream = stream;
       video.src = URL.createObjectURL(stream);
       video.onloadedmetadata = (e) => {
         video.play();
@@ -52,6 +59,14 @@ export class SnapshotCameraComponent implements OnInit {
     (err: MediaStreamError) => {
       console.error(err);
     });
+  }
+
+  stopSnapshot() {
+    if (this.stream) {
+      this.stream.getTracks().forEach(track => track.stop());
+      this.stream = null;
+    }
+    this.video.src = null;
   }
 
   takeSnapshot() {

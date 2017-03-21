@@ -8,11 +8,11 @@
     (input)="keywordsInputChange$.next(keywords.value)"/>
 </md-input-container>
 
-<div *ngIf="speech.isSupported()">
-    <button (click)="listenClick$.next()">Listen</button>
-</div>
+<button (click)="listenClick$.next()">Listen</button>
 
-<div>
+<button (click)="showCamera = !showCamera">Snapshot</button>
+
+<div *ngIf="showCamera">
     <app-snapshot-camera [width]="400" [height]="400" (snapshot)="snapshot$.next($event)"></app-snapshot-camera>
 </div>
 
