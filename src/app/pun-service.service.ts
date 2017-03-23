@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, asap } from './app.rx';
+import { Observable } from 'rxjs/Observable';
+import { asap } from 'rxjs/scheduler/asap';
 
 export interface Pun {
   pun: string,
