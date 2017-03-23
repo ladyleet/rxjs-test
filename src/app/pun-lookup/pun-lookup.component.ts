@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { Subject, Observable } from '../app.rx';
 import { PunService } from '../pun-service.service';
+import { SpeechService } from '../speech.service';
 
 @Component({
   selector: 'app-pun-lookup',
@@ -14,19 +15,10 @@ import { PunService } from '../pun-service.service';
         placeholder="Enter keyword"
         (input)="keywordsInputChange$.next(keywords.value)"/>
     </md-input-container>
-
-    <md-input-container>
-      <input #mykeywords type="text" mdInput 
-      autofocus="true"
-        placeholder="Enter keyword" 
-        (input)="keywordsInputChange2$.next(mykeywords.value)"/>
-    </md-input-container>
     
+    <button md-raised-button color="primary" (click)="listenClick$.next()">Say something!</button>
     <h3 class="primary-color">Pun Arsenal...</h3>
-    <span class="accent-color">{{suggestedKeywords}}</span>
-
-    <h3 class="primary-color">Pun Arsenal...</h3>
-    <span class="accent-color">{{suggestedKeywords2}}</span>
+    <span class="accent-color">{{keyword$ | async}}</span>
     
     <h3 class="primary-color">Puns Found</h3>
     <md-card *ngFor="let pun of (punsFound$ | async)">
@@ -35,42 +27,32 @@ import { PunService } from '../pun-service.service';
         {{pun?.answer}}
       </md-card-content>
     </md-card>
-
-    <md-card *ngFor="let pun of (punsFound2$ | async)">
-      <md-card-content>
-        {{pun?.pun}}
-        {{pun?.answer}}
-      </md-card-content>
-    </md-card>
   `,
   styles: [],
   providers: [
-    PunService
+    PunService, SpeechService
   ]
 })
 export class PunLookupComponent {
-
-  suggestedKeywords: string[] = null;
-  suggestedKeywords2: string[] = null;
-
   keywordsInputChange$ = new Subject<string>();
-  keywordsInputChange2$ = new Subject<string>();
+  listenClick$ = new Subject<void>();
 
-  keyword2$ = this.keywordsInputChange2$
-    .switchMap(text => this.puns.suggestKeywords(text))
-    .do(keywords => this.suggestedKeywords2 = keywords);
+  keywordsFromText$ = this.keywordsInputChange$
+    .do(x => console.log(x))
+    .switchMap(text => this.puns.suggestKeywords(text));
 
-  punsFound2$ = this.keyword2$ 
-    .switchMap(keywords => this.puns.getPuns(keywords))
+  keywordsFromSpeech$ = this.listenClick$
+    .switchMap(() => this.speechservice.listen());
 
-  keyword$ = this.keywordsInputChange$
-    .switchMap(text => this.puns.suggestKeywords(text))
-    .do(keywords => this.suggestedKeywords = keywords);
-
+  keyword$ = Observable.merge(
+    this.keywordsFromText$,
+    this.keywordsFromSpeech$
+  ).share();
+  
   punsFound$ = this.keyword$
       .switchMap(keywords => this.puns.getPuns(keywords))
 
   constructor(
-    private puns: PunService
+    private puns: PunService, private speechservice: SpeechService
   ) {}
 }
