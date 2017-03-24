@@ -3,7 +3,6 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { PunService } from '../pun-service.service';
 import { SpeechService } from '../speech.service';
-import { GoogleVisionService } from '../google-vision.service';
 
 @Component({
   selector: 'app-pun-lookup',
@@ -11,8 +10,7 @@ import { GoogleVisionService } from '../google-vision.service';
   styles: [],
   providers: [
     PunService,
-    SpeechService,
-    GoogleVisionService
+    SpeechService
   ]
 })
 export class PunLookupComponent {
@@ -20,16 +18,6 @@ export class PunLookupComponent {
   keywordsInputChange$ = new Subject<string>();
 
   listenClick$ = new Subject<void>();
-
-  snapshot$ = new Subject<{ dataURL: string }>();
-
-  googleVision$ = this.snapshot$
-    .map(e => {
-      const dataURLHeader = 'data:image/png;base64,';
-      const base64Image = e.dataURL.substr(dataURLHeader.length);
-      return base64Image;
-    })
-    .switchMap(base64Image => this.googleVision.annotateImage(base64Image));
 
   spokenKeyword$ = this.listenClick$
     .switchMap(() => this.speech.listen())
@@ -39,8 +27,7 @@ export class PunLookupComponent {
 
   keyword$ = Observable.merge(
     this.typedKeyword$,
-    this.spokenKeyword$,
-    this.googleVision$
+    this.spokenKeyword$
   ).share();
 
   punsFound$ = this.keyword$
@@ -49,6 +36,5 @@ export class PunLookupComponent {
   constructor(
     private puns: PunService, 
     private speech: SpeechService,
-    private googleVision: GoogleVisionService
   ) {}
 }
