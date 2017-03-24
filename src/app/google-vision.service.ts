@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { apiKey } from './api.key';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class GoogleVisionService {
@@ -8,7 +9,7 @@ export class GoogleVisionService {
   constructor(private http: Http) { }
 
 
-  annotateImage(imgBase64: string) {
+  annotateImage(imgBase64: string): Observable<string[]> {
     const body = JSON.stringify({
       requests: [
         {
@@ -30,12 +31,13 @@ export class GoogleVisionService {
     return this.http.post(
       `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`,
       body
-    ).map(res => res.json())
+    )
+    .map(res => res.json())
     .map(e => {
       if (!e.responses) {
         return [];
       } else {
-        return e.responses.reduce((labels, resp) => {
+        const results = e.responses.reduce((labels, resp) => {
           return labels.concat(
             resp.labelAnnotations ?
               resp.labelAnnotations.reduce((labels, label) => {
@@ -45,6 +47,9 @@ export class GoogleVisionService {
               []
           );
         }, []);
+
+        const s = new Set(results);
+        return Array.from(s.values());
       }
     })
   }

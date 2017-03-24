@@ -11,10 +11,13 @@ import { PunLookupComponent } from './pun-lookup/pun-lookup.component';
 import { SnapshotCameraComponent } from './snapshot-camera/snapshot-camera.component';
 
 // add RxJS operators
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/empty';
 
 @NgModule({
   declarations: [
