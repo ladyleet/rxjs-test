@@ -1,4 +1,4 @@
-import { Injectable, Inject, NgZone } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 // TODO: get this injected properly
@@ -9,7 +9,7 @@ const SpeechRecognition = window && (
 
 @Injectable()
 export class SpeechService {
-  constructor(private zone: NgZone) {
+  constructor() {
   }
 
   listen(): Observable<string[]> {
