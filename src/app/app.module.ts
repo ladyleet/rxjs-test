@@ -18,12 +18,14 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/empty';
+import { DialogSuggestionComponent } from './dialog-suggestion/dialog-suggestion.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PunLookupComponent,
     SnapshotCameraComponent,
+    DialogSuggestionComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,6 +33,7 @@ import 'rxjs/add/observable/empty';
     HttpModule,
     MaterialModule.forRoot()
   ],
+  entryComponents: [DialogSuggestionComponent],
   providers: [
   ],
   bootstrap: [AppComponent]

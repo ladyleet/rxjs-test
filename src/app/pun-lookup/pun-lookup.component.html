@@ -8,18 +8,22 @@
     (input)="keywordsInputChange$.next(keywords.value)"/>
 </md-input-container>
 
-<button (click)="listenClick$.next()">Listen</button>
+<button md-raised-button color="primary" (click)="openDialog()">Need Ideas?</button>
 
-<button (click)="showCamera = !showCamera">Snapshot</button>
+<button md-raised-button color="accent" (click)="listenClick$.next()">Listen</button>
+
+<button md-raised-button color="accent" (click)="showCamera = !showCamera">Snapshot</button>
 
 <div *ngIf="showCamera">
   <app-snapshot-camera [width]="400" [height]="400" (snapshot)="snapshot$.next($event)"></app-snapshot-camera>
 </div>
 
 <h3 class="primary-color">Suggested Keywords</h3>
-<ul>
-  <li *ngFor="let keyword of (keyword$ | async)">{{keyword}}</li>
-</ul>
+<md-card *ngFor="let keyword of (keyword$ | async)">
+  <md-card-content>
+    {{keyword}}
+  </md-card-content>
+</md-card>  
 
 <h3 class="primary-color">Puns Found</h3>
 <md-card *ngFor="let pun of (punsFound$ | async)">

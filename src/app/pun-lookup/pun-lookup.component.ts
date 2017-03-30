@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { PunService } from '../pun-service.service';
 import { SpeechService } from '../speech.service';
 import { GoogleVisionService } from '../google-vision.service';
+import { MdDialog } from '@angular/material';
+import { DialogSuggestionComponent } from '../dialog-suggestion/dialog-suggestion.component';
 
 @Component({
   selector: 'app-pun-lookup',
@@ -16,6 +18,10 @@ import { GoogleVisionService } from '../google-vision.service';
   ]
 })
 export class PunLookupComponent {
+
+  openDialog(){
+    this.dialog.open(DialogSuggestionComponent)
+  }
 
   keywordsInputChange$ = new Subject<string>();
 
@@ -49,6 +55,7 @@ export class PunLookupComponent {
   constructor(
     private puns: PunService, 
     private speech: SpeechService,
-    private googleVision: GoogleVisionService
+    private googleVision: GoogleVisionService,
+    public dialog : MdDialog
   ) {}
 }
