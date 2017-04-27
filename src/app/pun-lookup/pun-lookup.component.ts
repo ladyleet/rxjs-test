@@ -3,6 +3,7 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { PunService } from '../pun-service.service';
 import { SpeechService } from '../speech.service';
+import { LedServiceService } from '../led-service.service';
 import { HeatSensorService } from '../heat-sensor.service';
 import { GoogleVisionService } from '../google-vision.service';
 import { MdDialog } from '@angular/material';
@@ -16,7 +17,8 @@ import { DialogSuggestionComponent } from '../dialog-suggestion/dialog-suggestio
     PunService,
     SpeechService,
     GoogleVisionService,
-    HeatSensorService
+    HeatSensorService,
+    LedServiceService
   ]
 })
 export class PunLookupComponent {
@@ -32,6 +34,8 @@ export class PunLookupComponent {
   snapshot$ = new Subject<{ dataURL: string }>();
   
   getDevice$ = new Subject<any>();
+
+  led$ = new Subject<void>();
 
   googleVision$ = this.snapshot$
     .map(e => {
@@ -53,6 +57,9 @@ export class PunLookupComponent {
   
   tempKeyword$ = this.temperature$.map(t => t > 30 ? ['hot'] : ['cold']);
 
+  getLed$ = this.led$
+    .subscribe(() => this.ledService.connectLed())
+
   keyword$ = Observable.merge(
     this.typedKeyword$,
     this.spokenKeyword$,
@@ -69,6 +76,7 @@ export class PunLookupComponent {
     private speech: SpeechService,
     private googleVision: GoogleVisionService,
     private heatSensor:HeatSensorService,
+    private ledService:LedServiceService,
     public dialog : MdDialog
   ) {}
 }

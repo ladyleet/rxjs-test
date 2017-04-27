@@ -16,6 +16,8 @@
 
 <button md-raised-button color="accent" (click)="getDevice$.next()">Get Device</button>
 
+<button md-raised-button color="accent" (click)="led$.next()">Turn on LED</button>
+
 <div *ngIf="showCamera">
   <app-snapshot-camera [width]="400" [height]="400" (snapshot)="snapshot$.next($event)"></app-snapshot-camera>
 </div>
