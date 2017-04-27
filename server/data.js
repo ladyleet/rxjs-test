@@ -12,8 +12,8 @@ module.exports = {
 
   puns: {
     '0': {
-      pun: 'My wife has banana diet',
-      answer: 'She hasnt lost weight, but you should see her climb trees now!'
+      pun: 'Whats banana your mind?',
+      answer: 'A bunch.'
     },
     '1': { 
       pun: 'Id make a pun about a chicken...', 

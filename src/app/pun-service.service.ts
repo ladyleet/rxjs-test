@@ -13,6 +13,15 @@ export class PunService {
 
   constructor(private http: Http) { }
 
+  suggestKeywords(partial: string): Observable<string[]> {
+    return this.http.get(`https://localhost:4201/suggest-keywords?q=${partial}`)
+      .map(res => res.json())
+      .catch(err => {
+        console.error(err);
+        return Observable.empty();
+      });;
+  }
+
   getPuns(kwds: string[]): Observable<Pun[]> {
     const serialized = kwds.join(',');
     return this.http.get(`https://localhost:4201/puns?q=${serialized}`)
@@ -21,14 +30,5 @@ export class PunService {
         console.error(err);
         return Observable.empty();
       });
-  }
-
-  suggestKeywords(partial: string): Observable<string[]> {
-    return this.http.get(`https://localhost:4201/suggest-keywords?q=${partial}`)
-      .map(res => res.json())
-      .catch(err => {
-        console.error(err);
-        return Observable.empty();
-      });;
   }
 }

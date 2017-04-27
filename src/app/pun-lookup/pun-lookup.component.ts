@@ -3,6 +3,7 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { PunService } from '../pun-service.service';
 import { SpeechService } from '../speech.service';
+import { HeatSensorService } from '../heat-sensor.service';
 import { GoogleVisionService } from '../google-vision.service';
 import { MdDialog } from '@angular/material';
 import { DialogSuggestionComponent } from '../dialog-suggestion/dialog-suggestion.component';
@@ -14,7 +15,8 @@ import { DialogSuggestionComponent } from '../dialog-suggestion/dialog-suggestio
   providers: [
     PunService,
     SpeechService,
-    GoogleVisionService
+    GoogleVisionService,
+    HeatSensorService
   ]
 })
 export class PunLookupComponent {
@@ -28,6 +30,8 @@ export class PunLookupComponent {
   listenClick$ = new Subject<void>();
 
   snapshot$ = new Subject<{ dataURL: string }>();
+  
+  getDevice$ = new Subject<any>();
 
   googleVision$ = this.snapshot$
     .map(e => {
@@ -43,19 +47,28 @@ export class PunLookupComponent {
   typedKeyword$ = this.keywordsInputChange$
     .switchMap(text => this.puns.suggestKeywords(text));
 
+  temperature$ = this.getDevice$
+    .switchMap((_, i) => i % 2 === 0 ? this.heatSensor.getTemperature() : Observable.empty())
+    .share();
+  
+  tempKeyword$ = this.temperature$.map(t => t > 30 ? ['hot'] : ['cold']);
+
   keyword$ = Observable.merge(
     this.typedKeyword$,
     this.spokenKeyword$,
-    this.googleVision$
+    this.googleVision$,
+    this.tempKeyword$
   ).share();
 
   punsFound$ = this.keyword$
       .switchMap(keywords => this.puns.getPuns(keywords))
 
+
   constructor(
     private puns: PunService, 
     private speech: SpeechService,
     private googleVision: GoogleVisionService,
+    private heatSensor:HeatSensorService,
     public dialog : MdDialog
   ) {}
 }

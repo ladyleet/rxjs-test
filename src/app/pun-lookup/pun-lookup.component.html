@@ -14,8 +14,14 @@
 
 <button md-raised-button color="accent" (click)="showCamera = !showCamera">Snapshot</button>
 
+<button md-raised-button color="accent" (click)="getDevice$.next()">Get Device</button>
+
 <div *ngIf="showCamera">
   <app-snapshot-camera [width]="400" [height]="400" (snapshot)="snapshot$.next($event)"></app-snapshot-camera>
+</div>
+
+<div>
+  {{temperature$ | async}}
 </div>
 
 <h3 class="primary-color">Suggested Keywords</h3>

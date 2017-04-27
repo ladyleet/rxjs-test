@@ -9,6 +9,7 @@ import 'hammerjs';
 import { AppComponent } from './app.component';
 import { PunLookupComponent } from './pun-lookup/pun-lookup.component';
 import { SnapshotCameraComponent } from './snapshot-camera/snapshot-camera.component';
+import { WebBluetoothModule } from '@manekinekko/angular-web-bluetooth';
 
 // add RxJS operators
 import 'rxjs/add/operator/map';
@@ -18,6 +19,7 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/empty';
+import 'rxjs/add/operator/mergeMap';
 import { DialogSuggestionComponent } from './dialog-suggestion/dialog-suggestion.component';
 
 @NgModule({
@@ -31,7 +33,10 @@ import { DialogSuggestionComponent } from './dialog-suggestion/dialog-suggestion
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule.forRoot()
+    MaterialModule.forRoot(),
+    WebBluetoothModule.forRoot({
+      enableTracing: true // enable logs
+    })
   ],
   entryComponents: [DialogSuggestionComponent],
   providers: [
