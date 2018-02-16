@@ -1,11 +1,15 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { PunService } from '../pun-service.service';
 import { SpeechService } from '../speech.service';
 import { GoogleVisionService } from '../google-vision.service';
-import { MdDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { DialogSuggestionComponent } from '../dialog-suggestion/dialog-suggestion.component';
+
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/share';
 
 @Component({
   selector: 'app-pun-lookup',
@@ -53,9 +57,9 @@ export class PunLookupComponent {
       .switchMap(keywords => this.puns.getPuns(keywords))
 
   constructor(
-    private puns: PunService, 
+    private puns: PunService,
     private speech: SpeechService,
     private googleVision: GoogleVisionService,
-    public dialog : MdDialog
+    public dialog : MatDialog
   ) {}
 }

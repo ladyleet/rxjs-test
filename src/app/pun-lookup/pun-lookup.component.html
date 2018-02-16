@@ -1,34 +1,34 @@
 <span>
     <h3 class="primary-color">Search for Puns</h3>
 </span>
-<md-input-container>
-  <input #keywords type="text" mdInput
+<mat-input-container>
+  <input #keywords type="text" matInput
     autofocus="true"
     placeholder="Enter keyword"
     (input)="keywordsInputChange$.next(keywords.value)"/>
-</md-input-container>
+</mat-input-container>
 
-<button md-raised-button color="primary" (click)="openDialog()">Need Ideas?</button>
+<button mat-raised-button color="primary" (click)="openDialog()">Need Ideas?</button>
 
-<button md-raised-button color="accent" (click)="listenClick$.next()">Listen</button>
+<button mat-raised-button color="accent" (click)="listenClick$.next()">Listen</button>
 
-<button md-raised-button color="accent" (click)="showCamera = !showCamera">Snapshot</button>
+<button mat-raised-button color="accent" (click)="showCamera = !showCamera">Snapshot</button>
 
 <div *ngIf="showCamera">
   <app-snapshot-camera [width]="400" [height]="400" (snapshot)="snapshot$.next($event)"></app-snapshot-camera>
 </div>
 
 <h3 class="primary-color">Suggested Keywords</h3>
-<md-card *ngFor="let keyword of (keyword$ | async)">
-  <md-card-content>
+<mat-card *ngFor="let keyword of (keyword$ | async)">
+  <mat-card-content>
     {{keyword}}
-  </md-card-content>
-</md-card>  
+  </mat-card-content>
+</mat-card>
 
 <h3 class="primary-color">Puns Found</h3>
-<md-card *ngFor="let pun of (punsFound$ | async)">
-  <md-card-content>
+<mat-card *ngFor="let pun of (punsFound$ | async)">
+  <mat-card-content>
     {{pun.pun}}
     {{pun.answer}}
-  </md-card-content>
-</md-card>
+  </mat-card-content>
+</mat-card>
