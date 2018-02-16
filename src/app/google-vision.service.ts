@@ -37,21 +37,17 @@ export class GoogleVisionService {
       if (!e.responses) {
         return [];
       } else {
-        const results = e.responses.reduce((labels, resp) => {
-          return labels.concat(
-            resp.labelAnnotations ?
-              resp.labelAnnotations.reduce((labels, label) => {
-                labels.push(label.description);
-                return labels;
-              }, labels) :
-              []
-          );
+        const results = e.responses.reduce((results, response) => {
+          if (!response.labelAnnotations) {
+            return results;
+          }
+          return results.concat(response.labelAnnotations.map(a => a.description).filter(a => !!a));
         }, []);
 
-        const s = new Set(results);
+        const s = new Set<string>(results);
         return Array.from(s.values());
       }
-    })
+    });
   }
 }
 
